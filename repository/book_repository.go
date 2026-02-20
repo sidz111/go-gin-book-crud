@@ -18,9 +18,9 @@ func NewBookRepository(db *sql.DB) *BookRepository {
 
 // Create inserts a new book into the database
 func (r *BookRepository) Create(book *model.Book) error {
-	query := `INSERT INTO books (title, author, isbn, pages, price, published) VALUES (?, ?, ?, ?, ?, ?)`
+	query := `INSERT INTO books (title, author, price) VALUES (?, ?, ?)`
 
-	result, err := r.db.Exec(query, book.Title, book.Author, book.ISBN, book.Pages, book.Price, book.Published)
+	result, err := r.db.Exec(query, book.Title, book.Author, book.Price)
 	if err != nil {
 		return fmt.Errorf("failed to create book: %w", err)
 	}
@@ -33,11 +33,10 @@ func (r *BookRepository) Create(book *model.Book) error {
 // GetByID retrieves a book by its ID
 func (r *BookRepository) GetByID(id int) (*model.Book, error) {
 	book := &model.Book{}
-	query := `SELECT id, title, author, isbn, pages, price, published, created_at, updated_at FROM books WHERE id = ?`
+	query := `SELECT id, title, author, price FROM books WHERE id = ?`
 
 	err := r.db.QueryRow(query, id).Scan(
-		&book.ID, &book.Title, &book.Author, &book.ISBN, &book.Pages,
-		&book.Price, &book.Published, &book.CreatedAt, &book.UpdatedAt)
+		&book.ID, &book.Title, &book.Author, &book.Price)
 
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -52,7 +51,7 @@ func (r *BookRepository) GetByID(id int) (*model.Book, error) {
 // GetAll retrieves all books from the database
 func (r *BookRepository) GetAll() ([]model.Book, error) {
 	var books []model.Book
-	query := `SELECT id, title, author, isbn, pages, price, published, created_at, updated_at FROM books ORDER BY created_at DESC`
+	query := `SELECT id, title, author, price FROM books`
 
 	rows, err := r.db.Query(query)
 	if err != nil {
@@ -63,8 +62,7 @@ func (r *BookRepository) GetAll() ([]model.Book, error) {
 	for rows.Next() {
 		book := model.Book{}
 		err := rows.Scan(
-			&book.ID, &book.Title, &book.Author, &book.ISBN, &book.Pages,
-			&book.Price, &book.Published, &book.CreatedAt, &book.UpdatedAt)
+			&book.ID, &book.Title, &book.Author, &book.Price)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan book: %w", err)
 		}
@@ -76,9 +74,9 @@ func (r *BookRepository) GetAll() ([]model.Book, error) {
 
 // Update updates an existing book
 func (r *BookRepository) Update(id int, book *model.Book) error {
-	query := `UPDATE books SET title = ?, author = ?, isbn = ?, pages = ?, price = ?, published = ? WHERE id = ?`
+	query := `UPDATE books SET title = ?, author = ?, price = ? WHERE id = ?`
 
-	result, err := r.db.Exec(query, book.Title, book.Author, book.ISBN, book.Pages, book.Price, book.Published, id)
+	result, err := r.db.Exec(query, book.Title, book.Author, book.Price, id)
 	if err != nil {
 		return fmt.Errorf("failed to update book: %w", err)
 	}

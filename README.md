@@ -77,10 +77,7 @@ Content-Type: application/json
 {
   "title": "The Go Programming Language",
   "author": "Alan Donovan",
-  "isbn": "978-0134190440",
-  "pages": 400,
-  "price": 49.99,
-  "published": "2015-10-26T00:00:00Z"
+  "price": 49.99
 }
 ```
 
@@ -104,6 +101,7 @@ Content-Type: application/json
 
 {
   "title": "Updated Title",
+  "author": "Updated Author",
   "price": 59.99
 }
 ```
@@ -123,12 +121,7 @@ CREATE TABLE IF NOT EXISTS books (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
     author VARCHAR(255) NOT NULL,
-    isbn VARCHAR(20) UNIQUE NOT NULL,
-    pages INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    published DATETIME NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    price DECIMAL(10, 2) NOT NULL
 );
 ```
 
@@ -158,7 +151,7 @@ All errors return appropriate HTTP status codes:
 # Create a book
 curl -X POST http://localhost:8080/books \
   -H "Content-Type: application/json" \
-  -d '{"title":"Go Book","author":"John","isbn":"123","pages":300,"price":29.99,"published":"2020-01-01T00:00:00Z"}'
+  -d '{"title":"Go Book","author":"John Doe","price":29.99}'
 
 # Get all books
 curl http://localhost:8080/books

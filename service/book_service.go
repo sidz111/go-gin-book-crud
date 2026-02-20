@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"gin-practice3/model"
 	"gin-practice3/repository"
-	"time"
 )
 
 // BookService handles business logic for books
@@ -22,9 +21,6 @@ func (s *BookService) CreateBook(book *model.Book) (*model.Book, error) {
 	if err := validateBook(book); err != nil {
 		return nil, err
 	}
-
-	book.CreatedAt = time.Now()
-	book.UpdatedAt = time.Now()
 
 	if err := s.repo.Create(book); err != nil {
 		return nil, err
@@ -64,20 +60,9 @@ func (s *BookService) UpdateBook(id int, book *model.Book) error {
 	if book.Author != "" {
 		existingBook.Author = book.Author
 	}
-	if book.ISBN != "" {
-		existingBook.ISBN = book.ISBN
-	}
-	if book.Pages != 0 {
-		existingBook.Pages = book.Pages
-	}
 	if book.Price != 0 {
 		existingBook.Price = book.Price
 	}
-	if !book.Published.IsZero() {
-		existingBook.Published = book.Published
-	}
-
-	existingBook.UpdatedAt = time.Now()
 
 	return s.repo.Update(id, existingBook)
 }
@@ -97,12 +82,6 @@ func validateBook(book *model.Book) error {
 	}
 	if book.Author == "" {
 		return fmt.Errorf("author is required")
-	}
-	if book.ISBN == "" {
-		return fmt.Errorf("isbn is required")
-	}
-	if book.Pages <= 0 {
-		return fmt.Errorf("pages must be greater than 0")
 	}
 	if book.Price < 0 {
 		return fmt.Errorf("price cannot be negative")
