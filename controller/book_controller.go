@@ -20,7 +20,6 @@ func NewBookController(service *service.BookService) *BookController {
 	return &BookController{service: service}
 }
 
-// CreateBook handles POST /books
 func (c *BookController) CreateBook(ctx *gin.Context) {
 	var book model.Book
 

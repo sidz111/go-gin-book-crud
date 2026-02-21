@@ -6,17 +6,14 @@ import (
 	"gin-practice3/repository"
 )
 
-// BookService handles business logic for books
 type BookService struct {
 	repo *repository.BookRepository
 }
 
-// NewBookService creates a new BookService instance
 func NewBookService(repo *repository.BookRepository) *BookService {
 	return &BookService{repo: repo}
 }
 
-// CreateBook handles book creation
 func (s *BookService) CreateBook(book *model.Book) (*model.Book, error) {
 	if err := validateBook(book); err != nil {
 		return nil, err
@@ -29,7 +26,6 @@ func (s *BookService) CreateBook(book *model.Book) (*model.Book, error) {
 	return book, nil
 }
 
-// GetBook retrieves a book by ID
 func (s *BookService) GetBook(id int) (*model.Book, error) {
 	if id <= 0 {
 		return nil, fmt.Errorf("invalid book id")
@@ -37,12 +33,10 @@ func (s *BookService) GetBook(id int) (*model.Book, error) {
 	return s.repo.GetByID(id)
 }
 
-// GetAllBooks retrieves all books
 func (s *BookService) GetAllBooks() ([]model.Book, error) {
 	return s.repo.GetAll()
 }
 
-// UpdateBook handles book update
 func (s *BookService) UpdateBook(id int, book *model.Book) error {
 	if id <= 0 {
 		return fmt.Errorf("invalid book id")
@@ -53,7 +47,6 @@ func (s *BookService) UpdateBook(id int, book *model.Book) error {
 		return err
 	}
 
-	// Update fields if provided (non-empty/non-zero values)
 	if book.Title != "" {
 		existingBook.Title = book.Title
 	}
@@ -67,7 +60,6 @@ func (s *BookService) UpdateBook(id int, book *model.Book) error {
 	return s.repo.Update(id, existingBook)
 }
 
-// DeleteBook handles book deletion
 func (s *BookService) DeleteBook(id int) error {
 	if id <= 0 {
 		return fmt.Errorf("invalid book id")
