@@ -9,8 +9,15 @@ import (
 )
 
 // Connect creates a MySQL database connection
-func Connect(username, password, host string, port int, dbname string) (*sql.DB, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", username, password, host, port, dbname)
+func Connect() (*sql.DB, error) {
+
+	dbUser := "root"
+	dbPass := "root"
+	host := "localhost"
+	port := 3303
+	dbName := "books_db"
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", dbUser, dbPass, host, port, dbName)
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
